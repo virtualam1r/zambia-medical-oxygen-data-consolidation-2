@@ -1,4 +1,4 @@
-# Limitations and cautions
+# Data limitations
 
 - The 2020 assessment covered eight hospitals; the late-2023 BMES covered 91 hospitals. Neither is a full national census.
 - Installed or commissioned equipment is not automatically functional, producing at capacity, or supplying patients.
