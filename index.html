@@ -75,24 +75,38 @@
     <section id="downloads" hidden></section>
   </main>
   <footer><div class="wrap">Data files, methodology, and source registry: <a href="https://github.com/virtualam1r/zambia-medical-oxygen-data-consolidation-2">GitHub repository</a>.</div></footer>
-  <script src="dashboard-data.js"></script>
+  <script src="dashboard-data.js?v=20260717-6"></script>
   <script>
     const data = window.RESEARCH_DATA;
     const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
     const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
     const table = (rows, columns, numeric = []) => `<div class="table-wrap"><table><thead><tr>${columns.map(c => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(c => `<td class="${numeric.includes(c.key) ? "num" : ""}">${c.render ? c.render(row[c.key], row) : esc(row[c.key] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 
+    document.querySelectorAll("nav button").forEach(button => button.addEventListener("click", () => {
+      document.querySelectorAll("nav button").forEach(item => item.classList.toggle("active", item === button));
+      document.querySelectorAll("main section").forEach(section => section.hidden = section.id !== button.dataset.section);
+    }));
+
+    const metricColumns = data.metricColumns
+      .filter(column => column.key !== "goal_year")
+      .map(column => ["plan_goal", "2026_strategy_goal_2022_plan"].includes(column.key)
+        ? { ...column, label: "2026 strategy goal (2022 plan)" }
+        : column);
     const metricKey = `<div class="key"><strong>Code key:</strong> A = actual · B = 2022 strategy baseline · D = derived public minimum · E = estimate · R = reported without primary corroboration · N = national · P = programme · F = one facility · S = sample · 8H/7H/116H = hospital sample size · 53C = 53 COVID centres · OR = operating rooms. Combined codes describe both scope and evidence type; for example, [N,B] means national baseline.</div>`;
-    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${metricKey}${table(data.metrics, data.metricColumns, ["2020","2021","2022","2023","2024","2025","2026"])}`;
+    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${metricKey}${table(data.metrics, metricColumns, ["2020","2021","2022","2023","2024","2025","2026"])}`;
+    const planColumns = data.planColumns.filter(column => column.key !== "verdict");
     const planKey = `<div class="key"><strong>Column key:</strong> 2022 baseline = starting value in the national plan · 2025/2026 target = stated plan goal · Latest public evidence = most recent matching or related public value · Evidence date = date or cutoff for that value · — = not stated.</div>`;
-    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, data.planColumns)}`;
+    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, planColumns)}`;
 
     const sourceSection = document.getElementById("sources");
+    const sourceColumns = data.sourceColumns
+      .filter(column => ["title", "publisher", "evidence_years", "source_type", "url"].includes(column.key))
+      .map(column => column.key === "url" ? { ...column, render: value => link(value, "Open source") } : column);
     sourceSection.innerHTML = `<h2>Source registry</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
-      document.getElementById("source-table").innerHTML = table(filtered, data.sourceColumns);
+      document.getElementById("source-table").innerHTML = table(filtered, sourceColumns);
     };
     renderSources("");
     document.getElementById("source-search").addEventListener("input", event => renderSources(event.target.value));
@@ -126,10 +140,6 @@
       <div class="downloads">${documentationDownloads.map(downloadCard).join("")}</div>
       <div class="callout warning"><strong>Evidence types:</strong> actuals, estimates, targets, capacities, budgets, derived values, and contextual claims are stored separately. Definitions are in the methodology and evidence-status file.</div>`;
 
-    document.querySelectorAll("nav button").forEach(button => button.addEventListener("click", () => {
-      document.querySelectorAll("nav button").forEach(item => item.classList.toggle("active", item === button));
-      document.querySelectorAll("main section").forEach(section => section.hidden = section.id !== button.dataset.section);
-    }));
   </script>
 </body>
 </html>
