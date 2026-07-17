@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Independent public-source consolidation of Zambia medical oxygen evidence, 2020–2026.">
+  <title>Zambia Medical Oxygen Data Consolidation -2</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211b;
+      --muted: #5d6962;
+      --line: #dce3de;
+      --surface: #f5f7f5;
+      --paper: #ffffff;
+      --accent: #176b43;
+      --accent-soft: #e5f1ea;
+      --warn: #8a5a00;
+      --warn-soft: #fff5dd;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    a { color: var(--accent); }
+    header { border-bottom: 1px solid var(--line); background: var(--surface); }
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 26px 22px; }
+    h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 38px); letter-spacing: -0.025em; }
+    h2 { margin: 0 0 10px; font-size: 22px; }
+    h3 { margin: 0 0 8px; font-size: 17px; }
+    p { margin: 0 0 12px; }
+    .lede { max-width: 850px; color: var(--muted); font-size: 17px; }
+    .meta { margin-top: 14px; color: var(--muted); font-size: 13px; }
+    nav { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 20px; }
+    nav button { border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 8px 13px; cursor: pointer; }
+    nav button.active { background: var(--accent); border-color: var(--accent); color: white; }
+    main { padding: 24px 0 60px; }
+    section[hidden] { display: none; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin: 18px 0 24px; }
+    .card { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: var(--paper); }
+    .stat strong { display: block; color: var(--accent); font-size: 25px; letter-spacing: -0.025em; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    .callout { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 15px 17px; margin: 16px 0; }
+    .warning { border-left-color: var(--warn); background: var(--warn-soft); }
+    .toolbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin: 14px 0; }
+    input[type="search"] { width: min(420px, 100%); border: 1px solid var(--line); border-radius: 7px; padding: 9px 11px; font: inherit; }
+    .table-wrap { overflow: auto; max-height: 690px; border: 1px solid var(--line); border-radius: 9px; }
+    table { border-collapse: collapse; width: 100%; min-width: 980px; font-size: 13px; }
+    th { position: sticky; top: 0; z-index: 1; background: var(--surface); text-align: left; white-space: nowrap; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tbody tr:nth-child(even) { background: #fafbfa; }
+    .num { text-align: right; }
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 12px; background: var(--surface); border: 1px solid var(--line); }
+    .pill.live, .pill.actual, .pill.baseline { background: var(--accent-soft); border-color: #b9d8c6; color: #0f5936; }
+    .pill.target, .pill.capacity, .pill.budget, .pill.access-restricted { background: var(--warn-soft); border-color: #ead39b; color: #755000; }
+    .downloads { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .download { display: block; border: 1px solid var(--line); border-radius: 8px; padding: 13px; text-decoration: none; color: var(--ink); }
+    .download:hover { border-color: var(--accent); }
+    footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    ul { margin-top: 8px; }
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .downloads { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Zambia Medical Oxygen Data Consolidation -2</h1>
+      <p class="lede">Independent public-source evidence on infrastructure, supply, workforce, reliability, patient access, and national-plan accountability.</p>
+      <p class="meta">Evidence cutoff: 17 July 2026 · Source documents are linked, not redistributed.</p>
+      <nav aria-label="Dashboard sections">
+        <button class="active" data-section="overview">Overview</button>
+        <button data-section="metrics">Metrics by year</button>
+        <button data-section="plan">Plan vs actual</button>
+        <button data-section="timeline">Timeline</button>
+        <button data-section="sources">Sources</button>
+        <button data-section="downloads">Downloads</button>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section id="overview"></section>
+    <section id="metrics" hidden></section>
+    <section id="plan" hidden></section>
+    <section id="timeline" hidden></section>
+    <section id="sources" hidden></section>
+    <section id="downloads" hidden></section>
+  </main>
+  <footer><div class="wrap">Independent public-source research compilation. Not an official government or partner publication. <a href="https://github.com/virtualam1r/zambia-medical-oxygen-data-consolidation-2">View repository</a>.</div></footer>
+  <script src="dashboard-data.js"></script>
+  <script>
+    const data = window.RESEARCH_DATA;
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+    const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+    const pill = value => `<span class="pill ${esc(String(value).toLowerCase())}">${esc(value)}</span>`;
+    const table = (rows, columns, numeric = []) => `<div class="table-wrap"><table><thead><tr>${columns.map(c => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(c => `<td class="${numeric.includes(c.key) ? "num" : ""}">${c.render ? c.render(row[c.key], row) : esc(row[c.key] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+
+    document.getElementById("overview").innerHTML = `
+      <div class="callout"><strong>Bottom line.</strong> Public records verify major growth in oxygen-production assets and training. They do not yet establish universal reliability, actual oxygen delivered, or achievement of the national plan's 60% public-hospital goal.</div>
+      <div class="grid">
+        <div class="card stat"><strong>15 / 15</strong><span>World Bank mobile PSA plants commissioned by project close in 2024</span></div>
+        <div class="card stat"><strong>6 / 6</strong><span>Global Fund–UNOPS plants commissioned by April 2026</span></div>
+        <div class="card stat"><strong>76 + 672</strong><span>Trainers and additional nurses reached by the national cascade</span></div>
+        <div class="card stat"><strong>66 / 91</strong><span>Assessed hospitals without a bulk oxygen source in late 2023</span></div>
+      </div>
+      <h2>What the evidence supports</h2>
+      <div class="grid">
+        <div class="card"><h3>Infrastructure</h3><p>The 2022 strategy listed 10 public PSA sites. A conservative source reconciliation identifies at least 27 facility sites by April 2026, without claiming all were functional.</p></div>
+        <div class="card"><h3>Supply diversification</h3><p>The public LOX baseline moved from zero facilities in 2022 to at least two identifiable installations by December 2024.</p></div>
+        <div class="card"><h3>Workforce</h3><p>Clinical oxygen training expanded, and a formal maintenance curriculum was introduced at two colleges.</p></div>
+        <div class="card"><h3>Persistent gaps</h3><p>Late-2023 evidence showed incomplete plant reliability, piping, bulk access, biomedical coverage, and pulse-oximetry access.</p></div>
+      </div>
+      <div class="callout warning"><strong>Most important missing number.</strong> No public national annual value was found for the percentage of patients prescribed oxygen who received it continuously without interruption.</div>`;
+
+    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Rows separate installation, functionality, production, distribution, workforce, and patient-access measures. Empty cells are unknown—not zero.</p>${table(data.metrics, data.metricColumns, ["2020","2021","2022","2023","2024","2025","2026","goal_year"])}`;
+    document.getElementById("plan").innerHTML = `<h2>National plan versus public evidence</h2><p>“Not publicly reported” does not mean a target was missed. It means no comparable public actual was found.</p>${table(data.plan, data.planColumns)}`;
+    document.getElementById("timeline").innerHTML = `<h2>Post-2020 evidence timeline</h2>${table(data.timeline, data.timelineColumns)}`;
+
+    const sourceSection = document.getElementById("sources");
+    sourceSection.innerHTML = `<h2>Source registry</h2><p>Every source is linked rather than redistributed. Automated status was checked on ${esc(data.checkedOn)}.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    const renderSources = query => {
+      const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
+      document.getElementById("source-count").textContent = `${filtered.length} sources`;
+      document.getElementById("source-table").innerHTML = table(filtered, data.sourceColumns);
+    };
+    renderSources("");
+    document.getElementById("source-search").addEventListener("input", event => renderSources(event.target.value));
+
+    document.getElementById("downloads").innerHTML = `<h2>Downloads and documentation</h2><div class="downloads">${data.downloads.map(item => `<a class="download" href="${esc(item.path)}"><strong>${esc(item.label)}</strong><br><span>${esc(item.description)}</span></a>`).join("")}</div><div class="callout warning"><strong>Classification reminder.</strong> Actuals, estimates, targets, capacities, budgets, derived values, and contextual claims are separate. Read the methodology before reusing figures.</div>`;
+
+    document.querySelectorAll("nav button").forEach(button => button.addEventListener("click", () => {
+      document.querySelectorAll("nav button").forEach(item => item.classList.toggle("active", item === button));
+      document.querySelectorAll("main section").forEach(section => section.hidden = section.id !== button.dataset.section);
+    }));
+  </script>
+</body>
+</html>
