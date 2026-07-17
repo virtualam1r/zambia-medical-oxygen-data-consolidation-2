@@ -35,6 +35,8 @@
     section[hidden] { display: none; }
     .callout { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 15px 17px; margin: 16px 0; }
     .warning { border-left-color: var(--warn); background: var(--warn-soft); }
+    .key { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 11px 13px; margin: 12px 0; color: var(--muted); font-size: 13px; }
+    .key strong { color: var(--ink); }
     .toolbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin: 14px 0; }
     input[type="search"] { width: min(420px, 100%); border: 1px solid var(--line); border-radius: 7px; padding: 9px 11px; font: inherit; }
     .table-wrap { overflow: auto; max-height: 690px; border: 1px solid var(--line); border-radius: 9px; }
@@ -85,13 +87,20 @@
     const pill = value => `<span class="pill ${esc(String(value).toLowerCase())}">${esc(value)}</span>`;
     const table = (rows, columns, numeric = []) => `<div class="table-wrap"><table><thead><tr>${columns.map(c => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(c => `<td class="${numeric.includes(c.key) ? "num" : ""}">${c.render ? c.render(row[c.key], row) : esc(row[c.key] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 
-    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${table(data.metrics, data.metricColumns, ["2020","2021","2022","2023","2024","2025","2026","goal_year"])}`;
+    const metricColumns = data.metricColumns
+      .filter(column => column.key !== "goal_year")
+      .map(column => column.key === "plan_goal" ? { ...column, label: "2026 strategy goal (2022 plan)" } : column);
+    const metricKey = `<div class="key"><strong>Code key:</strong> A = actual · B = 2022 strategy baseline · D = derived public minimum · E = estimate · R = reported without primary corroboration · N = national · P = programme · F = one facility · S = sample · 8H/7H/116H = hospital sample size · 53C = 53 COVID centres · OR = operating rooms. Combined codes describe both scope and evidence type; for example, [N,B] means national baseline.</div>`;
+    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${metricKey}${table(data.metrics, metricColumns, ["2020","2021","2022","2023","2024","2025","2026"])}`;
     const planColumns = data.planColumns.filter(column => column.key !== "verdict");
-    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${table(data.plan, planColumns)}`;
-    document.getElementById("timeline").innerHTML = `<h2>Post-2020 data timeline</h2>${table(data.timeline, data.timelineColumns)}`;
+    const planKey = `<div class="key"><strong>Column key:</strong> 2022 baseline = starting value in the national plan · 2025/2026 target = stated plan goal · Latest public evidence = most recent matching or related public value · Evidence date = date or cutoff for that value · — = not stated.</div>`;
+    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, planColumns)}`;
+    const timelineKey = `<div class="key"><strong>Type key:</strong> Actual = measured, delivered, installed, commissioned, or operating at the stated scope · Baseline = strategy starting value · Estimate = approximate value · Capacity = design capability, not measured output · Derived = calculated from cited values · Reported/contested = qualified or secondary evidence · Target/planned = future result · Budget = financial value, not necessarily expenditure.</div>`;
+    document.getElementById("timeline").innerHTML = `<h2>Post-2020 data timeline</h2>${timelineKey}${table(data.timeline, data.timelineColumns)}`;
 
     const sourceSection = document.getElementById("sources");
-    sourceSection.innerHTML = `<h2>Source registry</h2><p>Links were checked on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    const sourceKey = `<div class="key"><strong>Link-status key:</strong> live = automated request succeeded · access-restricted = publisher returned a bot, authentication, or rate-limit response; the source remains publicly indexed.</div>`;
+    sourceSection.innerHTML = `<h2>Source registry</h2><p>Links were checked on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p>${sourceKey}<div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
