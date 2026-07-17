@@ -2,8 +2,8 @@
 
 The repository links to sources rather than redistributing documents.
 
-- Links checked: 55
-- Verified by automated request: 48
+- Links checked: 56
+- Verified by automated request: 49
 - Verified in a browser after publisher bot blocking: 7
 - Unavailable links: 0
 - Verification date: 2026-07-17
@@ -13,7 +13,7 @@ See `sources.csv` for title, publisher, evidence years, URL, verification method
 ## Content groups
 
 - Formal medical-oxygen reports and strategies: 9
-- Other formal reports containing oxygen data: 9
+- Other formal reports containing oxygen data: 10
 - Academic research: 6
 - Official government, programme, partner, and facility updates: 26
 - News and social posts: 5

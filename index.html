@@ -104,7 +104,7 @@
       .filter(column => ["title", "publisher", "evidence_years", "source_type", "url"].includes(column.key))
       .map(column => column.key === "url" ? { ...column, render: value => link(value, "Open source") } : column);
     const sourceGroupOrder = data.sourceGroupOrder || ["All sources"];
-    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Formal medical-oxygen reports and strategies appear first; broader reports, research, official updates, and news follow in separate groups. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 56 source links were verified on ${esc(data.checkedOn)}. Formal medical-oxygen reports and strategies appear first; broader reports, research, official updates, and news follow in separate groups. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
@@ -124,12 +124,12 @@
     const coreDownloads = [
       { label: "Core metrics by year (CSV)", path: "data/core_metrics_by_year.csv", description: "18 selected system metrics arranged by year, with evidence codes and 2026 strategy goals." },
       { label: "Strategy baseline and target comparison (CSV)", path: "data/strategy_baseline_target_comparison.csv", description: "14 national-plan indicators with 2022 baselines, 2025/2026 targets, latest public data, and comparability notes." },
-      { label: "Master observation dataset (CSV)", path: "data/master_observation_dataset.csv", description: "All 2,174 normalized observations with scope, status, source reference, notes, and quality flags." },
+      { label: "Master observation dataset (CSV)", path: "data/master_observation_dataset.csv", description: "All 2,175 normalized observations with scope, status, source reference, notes, and quality flags." },
       { label: "PSA facility-site reconciliation (CSV)", path: "data/psa_site_reconciliation.csv", description: "27 publicly identifiable sites with programme overlap, baseline presence, and counting cautions." },
-      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "55 verified external source links grouped by content, with publisher, evidence years, and verification method. This is not an archive of source documents." }
+      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "56 verified external source links grouped by content, with publisher, evidence years, and verification method. This is not an archive of source documents." }
     ];
     const supportingDownloads = [
-      { label: "Dated event log (CSV)", path: "data/dated_event_log.csv", description: "35 selected post-2020 events ordered by evidence period, with scope, source, and limitations." },
+      { label: "Dated event log (CSV)", path: "data/dated_event_log.csv", description: "36 selected post-2020 events ordered by evidence period, with scope, source, and limitations." },
       { label: "Evidence-status definitions (CSV)", path: "data/status_definitions.csv", description: "Definitions for actual, baseline, estimate, target, capacity, budget, derived, and other evidence types." }
     ];
     const documentationDownloads = [

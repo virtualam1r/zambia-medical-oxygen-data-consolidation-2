@@ -6,12 +6,12 @@ Consolidated public data on Zambia's medical oxygen system, covering 2020–2026
 
 ## Repository contents
 
-- 2,174 cleaned, source-referenced observations.
+- 2,175 cleaned, source-referenced observations.
 - A year-by-year matrix of core oxygen-system metrics.
 - National plan baseline and target comparisons.
 - A dated supporting event log.
 - A reconciled list of publicly identifiable PSA facility sites.
-- 55 organized source links with automated link checks dated 2026-07-17.
+- 56 organized source links with automated link checks dated 2026-07-17.
 - Methodology, evidence definitions, limitations, and data dictionary.
 
 Source documents are linked rather than stored in the repository. Private Ministry of Health, DHIS2, HMIS, and partner datasets are outside the scope of this consolidation.
