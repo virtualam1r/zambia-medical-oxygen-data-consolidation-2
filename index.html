@@ -62,9 +62,9 @@
       <p class="meta">Data through 17 July 2026 · 2,174 observations · 55 source links</p>
       <nav aria-label="Dashboard sections">
         <button class="active" data-section="metrics">Metrics by year</button>
-        <button data-section="plan">Plan comparison</button>
-        <button data-section="sources">Sources</button>
-        <button data-section="downloads">Downloads</button>
+        <button data-section="plan">2022 plan comparison</button>
+        <button data-section="sources">Links to all sources</button>
+        <button data-section="downloads">Consolidated data files</button>
       </nav>
     </div>
   </header>
@@ -74,7 +74,7 @@
     <section id="sources" hidden></section>
     <section id="downloads" hidden></section>
   </main>
-  <footer><div class="wrap">Data files, methodology, and source registry: <a href="https://github.com/virtualam1r/zambia-medical-oxygen-data-consolidation-2">GitHub repository</a>.</div></footer>
+  <footer><div class="wrap">Consolidated data files, methodology, and source links: <a href="https://github.com/virtualam1r/zambia-medical-oxygen-data-consolidation-2">GitHub repository</a>.</div></footer>
   <script src="dashboard-data.js?v=20260717-6"></script>
   <script>
     const data = window.RESEARCH_DATA;
@@ -96,13 +96,13 @@
     document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${metricKey}${table(data.metrics, metricColumns, ["2020","2021","2022","2023","2024","2025","2026"])}`;
     const planColumns = data.planColumns.filter(column => column.key !== "verdict");
     const planKey = `<div class="key"><strong>Column key:</strong> 2022 baseline = starting value in the national plan · 2025/2026 target = stated plan goal · Latest public evidence = most recent matching or related public value · Evidence date = date or cutoff for that value · — = not stated.</div>`;
-    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, planColumns)}`;
+    document.getElementById("plan").innerHTML = `<h2>2022 national plan comparison</h2><p>Baselines and targets from the 2022 plan are shown beside the latest matching public data. Only directly comparable values should be used to assess target completion.</p>${planKey}${table(data.plan, planColumns)}`;
 
     const sourceSection = document.getElementById("sources");
     const sourceColumns = data.sourceColumns
       .filter(column => ["title", "publisher", "evidence_years", "source_type", "url"].includes(column.key))
       .map(column => column.key === "url" ? { ...column, render: value => link(value, "Open source") } : column);
-    sourceSection.innerHTML = `<h2>Source registry</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
@@ -130,7 +130,7 @@
       { label: "Selected data summary", path: "docs/DATA_SUMMARY.md", description: "A short factual list of selected consolidated values with status and scope." }
     ];
     document.getElementById("downloads").innerHTML = `
-      <h2>Downloads and documentation</h2>
+      <h2>Consolidated data files and documentation</h2>
       <div class="callout"><strong>What these files are:</strong> cleaned and structured research outputs created from publicly available reports and webpages. They are not original source documents or raw copies of reports. Use the source-link registry to reach the original public sources.</div>
       <h3>Core data files</h3>
       <div class="downloads">${coreDownloads.map(downloadCard).join("")}</div>
