@@ -46,9 +46,6 @@
     th, td { padding: 10px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
     tbody tr:nth-child(even) { background: #fafbfa; }
     .num { text-align: right; }
-    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 12px; background: var(--surface); border: 1px solid var(--line); }
-    .pill.live, .pill.actual, .pill.baseline { background: var(--accent-soft); border-color: #b9d8c6; color: #0f5936; }
-    .pill.target, .pill.capacity, .pill.budget, .pill.access-restricted { background: var(--warn-soft); border-color: #ead39b; color: #755000; }
     .downloads { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .download { display: block; border: 1px solid var(--line); border-radius: 8px; padding: 13px; text-decoration: none; color: var(--ink); }
     .download:hover { border-color: var(--accent); }
@@ -83,7 +80,6 @@
     const data = window.RESEARCH_DATA;
     const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
     const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
-    const pill = value => `<span class="pill ${esc(String(value).toLowerCase())}">${esc(value)}</span>`;
     const table = (rows, columns, numeric = []) => `<div class="table-wrap"><table><thead><tr>${columns.map(c => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(c => `<td class="${numeric.includes(c.key) ? "num" : ""}">${c.render ? c.render(row[c.key], row) : esc(row[c.key] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 
     const metricKey = `<div class="key"><strong>Code key:</strong> A = actual · B = 2022 strategy baseline · D = derived public minimum · E = estimate · R = reported without primary corroboration · N = national · P = programme · F = one facility · S = sample · 8H/7H/116H = hospital sample size · 53C = 53 COVID centres · OR = operating rooms. Combined codes describe both scope and evidence type; for example, [N,B] means national baseline.</div>`;
@@ -92,8 +88,7 @@
     document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, data.planColumns)}`;
 
     const sourceSection = document.getElementById("sources");
-    const sourceKey = `<div class="key"><strong>Link-status key:</strong> live = automated request succeeded · access-restricted = publisher returned a bot, authentication, or rate-limit response; the source remains publicly indexed.</div>`;
-    sourceSection.innerHTML = `<h2>Source registry</h2><p>Links were checked on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p>${sourceKey}<div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    sourceSection.innerHTML = `<h2>Source registry</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
@@ -108,7 +103,7 @@
       { label: "Strategy baseline and target comparison (CSV)", path: "data/strategy_baseline_target_comparison.csv", description: "14 national-plan indicators with 2022 baselines, 2025/2026 targets, latest public data, and comparability notes." },
       { label: "Master observation dataset (CSV)", path: "data/master_observation_dataset.csv", description: "All 2,174 normalized observations with scope, status, source reference, notes, and quality flags." },
       { label: "PSA facility-site reconciliation (CSV)", path: "data/psa_site_reconciliation.csv", description: "27 publicly identifiable sites with programme overlap, baseline presence, and counting cautions." },
-      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "55 external source links with publisher, evidence years, and link-verification status. This is not an archive of source documents." }
+      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "55 verified external source links with publisher, evidence years, and verification method. This is not an archive of source documents." }
     ];
     const supportingDownloads = [
       { label: "Dated event log (CSV)", path: "data/dated_event_log.csv", description: "35 selected post-2020 events ordered by evidence period, with scope, source, and limitations." },

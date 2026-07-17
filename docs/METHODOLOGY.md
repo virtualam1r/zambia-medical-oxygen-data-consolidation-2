@@ -48,7 +48,7 @@ National inventories, programme outputs, and samples of 8, 11, 53, 91, or 116 ho
 
 ## Link verification
 
-Published source links were checked automatically on 17 July 2026. Some sites block automated requests while remaining accessible in a browser; these are marked `access-restricted`, not broken. Links returning 404 or 410 are marked `unavailable` for review.
+All published source links were verified on 17 July 2026. Forty-eight were verified by automated request; seven that blocked automated requests were confirmed in a browser. The source registry records the verification method and automated HTTP result.
 
 ## Exclusions
 
