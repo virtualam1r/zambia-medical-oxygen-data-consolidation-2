@@ -25,6 +25,7 @@
     .wrap { max-width: 1320px; margin: 0 auto; padding: 26px 22px; }
     h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 38px); letter-spacing: -0.025em; }
     h2 { margin: 0 0 10px; font-size: 22px; }
+    h3 { margin: 24px 0 9px; font-size: 16px; }
     p { margin: 0 0 12px; }
     .lede { max-width: 850px; color: var(--muted); font-size: 17px; }
     .meta { margin-top: 14px; color: var(--muted); font-size: 13px; }
@@ -65,7 +66,6 @@
       <nav aria-label="Dashboard sections">
         <button class="active" data-section="metrics">Metrics by year</button>
         <button data-section="plan">Plan comparison</button>
-        <button data-section="timeline">Data timeline</button>
         <button data-section="sources">Sources</button>
         <button data-section="downloads">Downloads</button>
       </nav>
@@ -74,7 +74,6 @@
   <main class="wrap">
     <section id="metrics"></section>
     <section id="plan" hidden></section>
-    <section id="timeline" hidden></section>
     <section id="sources" hidden></section>
     <section id="downloads" hidden></section>
   </main>
@@ -87,16 +86,10 @@
     const pill = value => `<span class="pill ${esc(String(value).toLowerCase())}">${esc(value)}</span>`;
     const table = (rows, columns, numeric = []) => `<div class="table-wrap"><table><thead><tr>${columns.map(c => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${columns.map(c => `<td class="${numeric.includes(c.key) ? "num" : ""}">${c.render ? c.render(row[c.key], row) : esc(row[c.key] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 
-    const metricColumns = data.metricColumns
-      .filter(column => column.key !== "goal_year")
-      .map(column => column.key === "plan_goal" ? { ...column, label: "2026 strategy goal (2022 plan)" } : column);
     const metricKey = `<div class="key"><strong>Code key:</strong> A = actual · B = 2022 strategy baseline · D = derived public minimum · E = estimate · R = reported without primary corroboration · N = national · P = programme · F = one facility · S = sample · 8H/7H/116H = hospital sample size · 53C = 53 COVID centres · OR = operating rooms. Combined codes describe both scope and evidence type; for example, [N,B] means national baseline.</div>`;
-    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${metricKey}${table(data.metrics, metricColumns, ["2020","2021","2022","2023","2024","2025","2026"])}`;
-    const planColumns = data.planColumns.filter(column => column.key !== "verdict");
+    document.getElementById("metrics").innerHTML = `<h2>Core metrics by year</h2><p>Values retain their reported scope and evidence code. Blank cells mean no comparable public value was identified; they do not mean zero.</p>${metricKey}${table(data.metrics, data.metricColumns, ["2020","2021","2022","2023","2024","2025","2026"])}`;
     const planKey = `<div class="key"><strong>Column key:</strong> 2022 baseline = starting value in the national plan · 2025/2026 target = stated plan goal · Latest public evidence = most recent matching or related public value · Evidence date = date or cutoff for that value · — = not stated.</div>`;
-    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, planColumns)}`;
-    const timelineKey = `<div class="key"><strong>Type key:</strong> Actual = measured, delivered, installed, commissioned, or operating at the stated scope · Baseline = strategy starting value · Estimate = approximate value · Capacity = design capability, not measured output · Derived = calculated from cited values · Reported/contested = qualified or secondary evidence · Target/planned = future result · Budget = financial value, not necessarily expenditure.</div>`;
-    document.getElementById("timeline").innerHTML = `<h2>Post-2020 data timeline</h2>${timelineKey}${table(data.timeline, data.timelineColumns)}`;
+    document.getElementById("plan").innerHTML = `<h2>National plan baseline, target, and latest public data</h2><p>Only directly comparable values should be used to assess target completion. Scope differences remain visible in the evidence text.</p>${planKey}${table(data.plan, data.planColumns)}`;
 
     const sourceSection = document.getElementById("sources");
     const sourceKey = `<div class="key"><strong>Link-status key:</strong> live = automated request succeeded · access-restricted = publisher returned a bot, authentication, or rate-limit response; the source remains publicly indexed.</div>`;
@@ -109,7 +102,34 @@
     renderSources("");
     document.getElementById("source-search").addEventListener("input", event => renderSources(event.target.value));
 
-    document.getElementById("downloads").innerHTML = `<h2>Downloads and documentation</h2><div class="downloads">${data.downloads.map(item => `<a class="download" href="${esc(item.path)}"><strong>${esc(item.label)}</strong><br><span>${esc(item.description)}</span></a>`).join("")}</div><div class="callout warning"><strong>Evidence types.</strong> Actuals, estimates, targets, capacities, budgets, derived values, and contextual claims are stored separately. Definitions are in the methodology and status file.</div>`;
+    const downloadCard = item => `<a class="download" href="${esc(item.path)}"><strong>${esc(item.label)}</strong><br><span>${esc(item.description)}</span></a>`;
+    const coreDownloads = [
+      { label: "Core metrics by year (CSV)", path: "data/core_metrics_by_year.csv", description: "18 selected system metrics arranged by year, with evidence codes and 2026 strategy goals." },
+      { label: "Strategy baseline and target comparison (CSV)", path: "data/strategy_baseline_target_comparison.csv", description: "14 national-plan indicators with 2022 baselines, 2025/2026 targets, latest public data, and comparability notes." },
+      { label: "Master observation dataset (CSV)", path: "data/master_observation_dataset.csv", description: "All 2,174 normalized observations with scope, status, source reference, notes, and quality flags." },
+      { label: "PSA facility-site reconciliation (CSV)", path: "data/psa_site_reconciliation.csv", description: "27 publicly identifiable sites with programme overlap, baseline presence, and counting cautions." },
+      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "55 external source links with publisher, evidence years, and link-verification status. This is not an archive of source documents." }
+    ];
+    const supportingDownloads = [
+      { label: "Dated event log (CSV)", path: "data/dated_event_log.csv", description: "35 selected post-2020 events ordered by evidence period, with scope, source, and limitations." },
+      { label: "Evidence-status definitions (CSV)", path: "data/status_definitions.csv", description: "Definitions for actual, baseline, estimate, target, capacity, budget, derived, and other evidence types." }
+    ];
+    const documentationDownloads = [
+      { label: "Methodology", path: "docs/METHODOLOGY.md", description: "Source hierarchy, normalization, classification, comparability, and exclusions." },
+      { label: "Data dictionary", path: "docs/DATA_DICTIONARY.md", description: "Definitions for every field in the master observation dataset." },
+      { label: "Data limitations", path: "docs/LIMITATIONS.md", description: "Sampling, comparability, functionality, inventory, and public-data limitations." },
+      { label: "Selected data summary", path: "docs/DATA_SUMMARY.md", description: "A short factual list of selected consolidated values with status and scope." }
+    ];
+    document.getElementById("downloads").innerHTML = `
+      <h2>Downloads and documentation</h2>
+      <div class="callout"><strong>What these files are:</strong> cleaned and structured research outputs created from publicly available reports and webpages. They are not original source documents or raw copies of reports. Use the source-link registry to reach the original public sources.</div>
+      <h3>Core data files</h3>
+      <div class="downloads">${coreDownloads.map(downloadCard).join("")}</div>
+      <h3>Supporting data</h3>
+      <div class="downloads">${supportingDownloads.map(downloadCard).join("")}</div>
+      <h3>Documentation</h3>
+      <div class="downloads">${documentationDownloads.map(downloadCard).join("")}</div>
+      <div class="callout warning"><strong>Evidence types:</strong> actuals, estimates, targets, capacities, budgets, derived values, and contextual claims are stored separately. Definitions are in the methodology and evidence-status file.</div>`;
 
     document.querySelectorAll("nav button").forEach(button => button.addEventListener("click", () => {
       document.querySelectorAll("nav button").forEach(item => item.classList.toggle("active", item === button));
