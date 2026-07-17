@@ -12,10 +12,10 @@ See `sources.csv` for title, publisher, evidence years, URL, verification method
 
 ## Content groups
 
-- National plans and government records: 2
-- Formal reports and assessments: 17
+- Formal medical-oxygen reports and strategies: 9
+- Other formal reports containing oxygen data: 9
 - Academic research: 6
-- Official programme, partner, and facility updates: 25
+- Official government, programme, partner, and facility updates: 26
 - News and social posts: 5
 
 The dashboard displays these groups in the order above. The downloadable registry records each source's `content_group`.

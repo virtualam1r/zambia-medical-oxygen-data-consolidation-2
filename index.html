@@ -76,7 +76,7 @@
     <section id="downloads" hidden></section>
   </main>
   <footer><div class="wrap">Consolidated data files, methodology, and source links: <a href="https://github.com/virtualam1r/zambia-medical-oxygen-data-consolidation-2">GitHub repository</a>.</div></footer>
-  <script src="dashboard-data.js?v=20260717-7"></script>
+  <script src="dashboard-data.js?v=20260717-8"></script>
   <script>
     const data = window.RESEARCH_DATA;
     const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -104,7 +104,7 @@
       .filter(column => ["title", "publisher", "evidence_years", "source_type", "url"].includes(column.key))
       .map(column => column.key === "url" ? { ...column, render: value => link(value, "Open source") } : column);
     const sourceGroupOrder = data.sourceGroupOrder || ["All sources"];
-    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Sources are grouped by content, with formal records first and news or social posts last. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Formal medical-oxygen reports and strategies appear first; broader reports, research, official updates, and news follow in separate groups. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
