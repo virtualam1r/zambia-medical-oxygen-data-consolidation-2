@@ -26,6 +26,7 @@
     h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 38px); letter-spacing: -0.025em; }
     h2 { margin: 0 0 10px; font-size: 22px; }
     h3 { margin: 24px 0 9px; font-size: 16px; }
+    .group-count { color: var(--muted); font-weight: 400; }
     p { margin: 0 0 12px; }
     .lede { max-width: 850px; color: var(--muted); font-size: 17px; }
     .meta { margin-top: 14px; color: var(--muted); font-size: 13px; }
@@ -75,7 +76,7 @@
     <section id="downloads" hidden></section>
   </main>
   <footer><div class="wrap">Consolidated data files, methodology, and source links: <a href="https://github.com/virtualam1r/zambia-medical-oxygen-data-consolidation-2">GitHub repository</a>.</div></footer>
-  <script src="dashboard-data.js?v=20260717-6"></script>
+  <script src="dashboard-data.js?v=20260717-7"></script>
   <script>
     const data = window.RESEARCH_DATA;
     const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -102,11 +103,19 @@
     const sourceColumns = data.sourceColumns
       .filter(column => ["title", "publisher", "evidence_years", "source_type", "url"].includes(column.key))
       .map(column => column.key === "url" ? { ...column, render: value => link(value, "Open source") } : column);
-    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
+    const sourceGroupOrder = data.sourceGroupOrder || ["All sources"];
+    sourceSection.innerHTML = `<h2>Links to all sources</h2><p>All 55 source links were verified on ${esc(data.checkedOn)}. Sources are grouped by content, with formal records first and news or social posts last. Source documents are not stored in this repository.</p><div class="toolbar"><input id="source-search" type="search" placeholder="Search source title, publisher, year, or URL"><span id="source-count"></span></div><div id="source-table"></div>`;
     const renderSources = query => {
       const filtered = data.sources.filter(row => Object.values(row).join(" ").toLowerCase().includes(query.toLowerCase()));
       document.getElementById("source-count").textContent = `${filtered.length} sources`;
-      document.getElementById("source-table").innerHTML = table(filtered, sourceColumns);
+      document.getElementById("source-table").innerHTML = sourceGroupOrder
+        .map(group => {
+          const rows = filtered.filter(row => (row.content_group || "All sources") === group);
+          return rows.length
+            ? `<h3>${esc(group)} <span class="group-count">(${rows.length})</span></h3>${table(rows, sourceColumns)}`
+            : "";
+        })
+        .join("");
     };
     renderSources("");
     document.getElementById("source-search").addEventListener("input", event => renderSources(event.target.value));
@@ -117,7 +126,7 @@
       { label: "Strategy baseline and target comparison (CSV)", path: "data/strategy_baseline_target_comparison.csv", description: "14 national-plan indicators with 2022 baselines, 2025/2026 targets, latest public data, and comparability notes." },
       { label: "Master observation dataset (CSV)", path: "data/master_observation_dataset.csv", description: "All 2,174 normalized observations with scope, status, source reference, notes, and quality flags." },
       { label: "PSA facility-site reconciliation (CSV)", path: "data/psa_site_reconciliation.csv", description: "27 publicly identifiable sites with programme overlap, baseline presence, and counting cautions." },
-      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "55 verified external source links with publisher, evidence years, and verification method. This is not an archive of source documents." }
+      { label: "Source-link registry (CSV)", path: "sources/sources.csv", description: "55 verified external source links grouped by content, with publisher, evidence years, and verification method. This is not an archive of source documents." }
     ];
     const supportingDownloads = [
       { label: "Dated event log (CSV)", path: "data/dated_event_log.csv", description: "35 selected post-2020 events ordered by evidence period, with scope, source, and limitations." },
